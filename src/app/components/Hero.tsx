@@ -2,6 +2,7 @@ import { Button } from './ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'motion/react';
 import bg from '../assets/bg.jpg';
+import bg1 from '../assets/hero bg5.jpg'
 
 
 
@@ -48,8 +49,8 @@ export function Hero() {
             transition={{ delay: 0.4, duration: 0.8 }}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/30 to-blue-200/30 rounded-3xl blur-3xl"></div>
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/50 backdrop-blur-sm">
-              <img src={bg} alt="Hero Image" className="w-full h-full object-cover" />
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl  backdrop-blur-sm">
+              <img src={bg1} alt="Hero Image" className="w-full h-full object-cover" />
             </div>
           </motion.div>
 

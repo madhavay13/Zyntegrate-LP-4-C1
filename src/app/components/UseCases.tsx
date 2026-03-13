@@ -2,8 +2,10 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
 import { WorkflowDiagram } from "./WorkFlow";
-import Nocode from "../assets/nocode.png";
-import Connectors from "../assets/connectors.png";
+// import Nocode from "../assets/nocode.png";
+import Nocode from "../assets/nocode1.jpg";
+import Connectors from "../assets/connectors1.png";
+import AI from '../assets/chatbot1.jpg'
 
 const useCases = [
   {
@@ -47,7 +49,7 @@ const useCases = [
     description:
       "Deploy intelligent AI agents that monitor workflows, trigger integrations, and automate operational tasks.",
     image:
-      "https://plus.unsplash.com/premium_photo-1725907643623-f0f2fea6ff17?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      AI,
     benefits: [
       "Autonomous workflow execution",
       "AI-driven decision making",

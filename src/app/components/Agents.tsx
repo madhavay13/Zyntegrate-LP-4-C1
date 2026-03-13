@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, useAnimate, AnimatePresence } from "motion/react";
+import { motion, useAnimate } from "motion/react";
 import { Check } from "lucide-react";
 
 const workflows = [
@@ -7,33 +7,39 @@ const workflows = [
     bubble:
       "Hi, when a new customer signs up, add them to Salesforce, create a contact in HubSpot, and notify my team via AWS SNS.",
     steps: [
-      "Bot receives new customer signup request",
-      "Adds customer info to Salesforce",
-      "Creates contact in HubSpot",
-      "Sends notification to team via AWS SNS",
-      "Keeps an eye on all new events",
+      { id: "01", phase: "RECEIVE", text: "Receives new customer signup request" },
+      { id: "02", phase: "SOURCE", text: "Connects to website signup system" },
+      { id: "03", phase: "DESTINATION", text: "Connects to Salesforce, HubSpot, and AWS SNS" },
+      { id: "04", phase: "TRANSFER", text: "Transfers customer data to connected platforms" },
+      { id: "05", phase: "UNDERSTAND", text: "Understands signup event and workflow requirements" },
+      { id: "06", phase: "IDENTIFY", text: "Identifies CRM updates and notification triggers" },
+      { id: "07", phase: "COMPLETE", text: "Customer added and team notified successfully" },
     ],
   },
   {
     bubble:
       "Whenever someone places an order on my website, trigger the order processing queue and schedule follow-up tasks.",
     steps: [
-      "Bot detects new order via webhook",
-      "Adds order to AWS SQS queue",
-      "Triggers Azure Service Bus event for processing",
-      "Starts a timer for follow-up tasks",
-      "Monitors order workflow automatically",
+      { id: "01", phase: "RECEIVE", text: "Receives new order event from website" },
+      { id: "02", phase: "SOURCE", text: "Connects to ecommerce order system" },
+      { id: "03", phase: "DESTINATION", text: "Connects to AWS SQS and workflow scheduler" },
+      { id: "04", phase: "TRANSFER", text: "Transfers order data to processing queue" },
+      { id: "05", phase: "UNDERSTAND", text: "Understands order workflow logic" },
+      { id: "06", phase: "IDENTIFY", text: "Identifies follow-up tasks and automation triggers" },
+      { id: "07", phase: "COMPLETE", text: "Order workflow triggered successfully" },
     ],
   },
   {
     bubble:
       "If a live chat message comes in through WebSocket, update HubSpot and Salesforce, and schedule a reminder to follow up later.",
     steps: [
-      "Bot receives WebSocket chat message",
-      "Updates HubSpot with customer info",
-      "Updates Salesforce with the same info",
-      "Schedules follow-up using Timer",
-      "Monitors live chat workflow continuously",
+      { id: "01", phase: "RECEIVE", text: "Receives WebSocket live chat message" },
+      { id: "02", phase: "SOURCE", text: "Connects to live chat message stream" },
+      { id: "03", phase: "DESTINATION", text: "Connects to HubSpot and Salesforce CRMs" },
+      { id: "04", phase: "TRANSFER", text: "Transfers chat data to CRM systems" },
+      { id: "05", phase: "UNDERSTAND", text: "Understands conversation context" },
+      { id: "06", phase: "IDENTIFY", text: "Identifies follow-up action and reminder workflow" },
+      { id: "07", phase: "COMPLETE", text: "CRM updated and reminder scheduled" },
     ],
   },
 ];
@@ -59,14 +65,15 @@ function Agents() {
         await animate("#arrow2", { opacity: 1 }, { duration: 0.4 });
 
         for (let i = 0; i < steps.length; i++) {
-          const stepEl = document.getElementById(`step-${i}`);
-          const tickEl = stepEl?.querySelector("svg");
-          const stepSpan = document.getElementById(`step-text-${i}`);
+          const phaseEl = document.getElementById(`step-phase-${i}`);
+          const textEl = document.getElementById(`step-text-${i}`);
 
-          if (stepSpan) stepSpan.textContent = steps[i];
+          if (phaseEl) phaseEl.textContent = steps[i].phase;
+          if (textEl) textEl.textContent = steps[i].text;
 
           await animate(`#step-${i}`, { opacity: 1, y: 0 }, { duration: 0.5 });
 
+          const tickEl = document.getElementById(`tick-${i}`);
           if (tickEl) {
             await animate(tickEl, { opacity: 1, scale: [0, 1.2, 1] }, { duration: 0.3 });
           }
@@ -88,22 +95,22 @@ function Agents() {
 
   const rightSideCards = [
     {
-      label: "Event",
-      title: (steps: string[]) => steps[0] || "",
-      description: (steps: string[]) =>
-        `Detects "${steps[0]}" and other incoming events.`,
+      label: "Receive & Understand",
+      title: "Input",
+      description:
+        "The agent receives requests or events and interprets the intent quickly.",
     },
     {
-      label: "Trigger",
-      title: (steps: string[]) => steps[1] || "",
-      description: (steps: string[]) =>
-        `Automatically triggers "${steps[1]}" in connected systems.`,
+      label: "Process & Connect",
+      title: "Execution",
+      description:
+        "Automatically connects to necessary systems and executes actions.",
     },
     {
-      label: "Notifications & Monitoring",
-      title: (steps: string[]) => steps[2] || "",
-      description: (steps: string[]) =>
-        `Executes "${steps[2]}" and keeps track of workflow progress.`,
+      label: "Monitor & Complete",
+      title: "Result",
+      description:
+        "Tracks progress, ensures success, and delivers the final outcome.",
     },
   ];
 
@@ -114,8 +121,8 @@ function Agents() {
     >
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 right-10 w-96 h-96 bg-brand-200/20 blur-3xl rounded-full animate-pulse" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-brand-100/20 blur-3xl rounded-full animate-pulse delay-1000" />
+        <div className="absolute top-10 right-10 w-96 h-96 bg-brand-200/20 blur-3xl rounded-full" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-brand-100/20 blur-3xl rounded-full" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-2 gap-10 items-stretch">
@@ -128,34 +135,28 @@ function Agents() {
             <div
               id="bubble"
               data-anim
-              className="opacity-0 px-5 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-medium text-sm mb-3 text-center"
+              className="opacity-0 px-5 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-900 text-sm text-center font-medium"
             />
 
             {/* Arrow */}
             <div id="arrow1" data-anim className="opacity-0 flex flex-col items-center mb-4">
               <div className="w-px h-6 bg-gradient-to-b from-brand-400/60 to-brand-200/40" />
               <svg className="w-5 h-5 text-brand-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
+                <path fillRule="evenodd" clipRule="evenodd"
                   d="M10 14a1 1 0 01-.707-.293l-4-4a1 1 0 111.414-1.414L10 11.586l3.293-3.293a1 1 0 111.414 1.414l-4 4A1 1 0 0110 14z"
                 />
               </svg>
             </div>
 
             {/* Agent */}
-            <div
-              id="agent"
-              data-anim
-              className="opacity-0 relative w-32 h-32 my-2 flex items-center justify-center"
-            >
+            <div id="agent" data-anim className="opacity-0 relative w-32 h-32 flex items-center justify-center">
               <motion.div
                 className="absolute inset-0 rounded-full border border-dashed border-brand-400/50"
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
               />
               <div className="absolute inset-4 rounded-full border border-brand-300/50" />
-              <div className="absolute inset-8 rounded-full bg-white border border-brand-100 shadow-xl flex items-center justify-center text-brand-900 font-semibold tracking-widest">
+              <div className="absolute inset-8 rounded-full bg-white border border-brand-100 shadow-xl flex items-center justify-center font-semibold tracking-widest text-sm text-brand-900">
                 Agent
               </div>
             </div>
@@ -164,29 +165,40 @@ function Agents() {
             <div id="arrow2" data-anim className="opacity-0 flex flex-col items-center mb-4">
               <div className="w-px h-6 bg-gradient-to-b from-brand-400/60 to-brand-200/40" />
               <svg className="w-5 h-5 text-brand-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
+                <path fillRule="evenodd" clipRule="evenodd"
                   d="M10 14a1 1 0 01-.707-.293l-4-4a1 1 0 111.414-1.414L10 11.586l3.293-3.293a1 1 0 111.414 1.414l-4 4A1 1 0 0110 14z"
                 />
               </svg>
             </div>
 
             {/* Steps */}
-            <div className="flex flex-col items-center gap-2 mt-2">
-              {Array.from({ length: 5 }).map((_, i) => (
+            <div className="flex flex-col gap-1.5 w-full">
+              {Array.from({ length: 7 }).map((_, i) => (
                 <div
                   key={i}
                   id={`step-${i}`}
                   data-anim
-                  className="opacity-0 flex items-center gap-3 px-4 py-1 rounded-xl bg-brand-50/60 border border-brand-100 min-w-[220px] max-w-xs"
+                  className="opacity-0 flex items-center gap-3 px-3 py-1.5 rounded-xl border w-full bg-brand-50/60 border-brand-100"
                 >
-                  <div className="max-w-max flex-shrink-0 flex justify-center">
-                    <Check className="text-green-500 w-4 h-4 opacity-0" data-tick />
+                  <div className="w-7 h-7 rounded-md bg-brand-100 border border-brand-200 flex items-center justify-center text-xs font-bold text-brand-500 flex-shrink-0">
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                  <span
-                    className="text-brand-900 text-sm flex-1"
-                    id={`step-text-${i}`}
+
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span
+                      id={`step-phase-${i}`}
+                      className="text-brand-500 text-[9px] tracking-[2px] uppercase font-semibold"
+                    />
+                    <span
+                      id={`step-text-${i}`}
+                      className="text-xs truncate text-brand-800"
+                    />
+                  </div>
+
+                  <Check
+                    id={`tick-${i}`}
+                    data-tick
+                    className="text-green-500 w-3.5 h-3.5 opacity-0"
                   />
                 </div>
               ))}
@@ -198,45 +210,35 @@ function Agents() {
         {/* RIGHT SIDE */}
         <div className="space-y-5 h-full flex flex-col justify-center">
 
-          <h2 className="text-4xl lg:text-5xl font-bold text-brand-900 leading-tight">
+          <h2 className="text-4xl lg:text-5xl font-bold leading-tight text-brand-900 mb-10">
             Your Systems.
-            <span className="block text-brand-500 bg-clip-text ">
-              Now Autonomous.
-            </span>
+            <span className="block text-brand-500">Now Autonomous.</span>
           </h2>
 
-          <p className="text-brand-800 text-lg leading-relaxed">
+          <p className="text-lg leading-relaxed text-brand-800">
             AI agents that monitor events, trigger workflows, and optimize operations automatically.
           </p>
 
-          <div className="grid gap-4">
-            {rightSideCards.map((card, idx) => {
-              const title = card.title(workflows[currentWorkflow].steps);
-              const desc = card.description(workflows[currentWorkflow].steps);
+          <div className="grid gap-8">
+            {rightSideCards.map((card, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="p-4 rounded-2xl bg-white border border-brand-100 shadow-lg"
+              >
+                <span className="inline-block mb-2 text-xs uppercase tracking-widest px-3 rounded-full border bg-brand-50 text-brand-500 border-brand-200">
+                  {card.label}
+                </span>
 
-              return (
-                <AnimatePresence mode="popLayout" key={idx}>
-                  <motion.div
-                    key={`${currentWorkflow}-${idx}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="p-4 rounded-2xl bg-white border border-brand-100 shadow-lg"
-                  >
-                    <span className="inline-block mb-2 text-xs uppercase tracking-widest bg-brand-50 text-brand-500 px-3 rounded-full border border-brand-200">
-                      {card.label}
-                    </span>
+                <h3 className="text-lg font-semibold mb-1 text-brand-900">
+                  {card.title}
+                </h3>
 
-                    <h3 className="text-lg font-semibold text-brand-900 mb-1">
-                      {title}
-                    </h3>
-
-                    <p className="text-brand-800 text-sm">{desc}</p>
-                  </motion.div>
-                </AnimatePresence>
-              );
-            })}
+                <p className="text-sm text-brand-800">{card.description}</p>
+              </motion.div>
+            ))}
           </div>
 
         </div>
