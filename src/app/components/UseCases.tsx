@@ -6,6 +6,10 @@ import { WorkflowDiagram } from "./WorkFlow";
 import Nocode from "../assets/nocode1.jpg";
 import Connectors from "../assets/connectors1.png";
 import AI from '../assets/chatbot1.jpg'
+import data from "../assets/556.jpg"
+import vendor from "../assets/vendor1.png"
+import api from "../assets/api1.jpg"
+import monitoring from "../assets/monitoring1.jpg"
 
 const useCases = [
   {
@@ -13,7 +17,7 @@ const useCases = [
     description:
       "Connect outdated databases and systems with modern cloud applications without extensive rewrites.",
     image:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600",
+      data,
     benefits: [
       "Bridge legacy and modern systems",
       "Preserve existing investments",
@@ -25,7 +29,7 @@ const useCases = [
     description:
       "Seamlessly integrate services across AWS, Azure, Google Cloud, and other cloud providers.",
     image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600",
+      vendor,
     benefits: [
       "Cross-platform data flow",
       "Unified management console",
@@ -37,7 +41,7 @@ const useCases = [
     description:
       "Connect with any REST, SOAP, or GraphQL API to extend your business capabilities.",
     image:
-      "https://as1.ftcdn.net/jpg/07/63/99/82/1000_F_763998295_3r5Ln9vzFfb7P8Si8UNiWlauSmoiReGw.webp",
+      api,
     benefits: [
       "Pre-built connectors for popular APIs",
       "Custom connector development",
@@ -85,7 +89,7 @@ const useCases = [
   description:
     "Track every workflow with live dashboards, logs, and intelligent alerting.",
   image:
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600",
+    monitoring,
   benefits: [
     "Real-time dashboards and logs",
     "Customizable alerts and notifications",
